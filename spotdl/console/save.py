@@ -11,6 +11,7 @@ from pathlib import Path
 from spotdl.download.downloader import Downloader
 from spotdl.utils.search import parse_query
 from spotdl.utils.m3u import create_m3u_file
+from spotdl.utils.bounded_queue_tpe import ThreadPoolExecutorWithQueueSizeLimit
 
 
 def save(
@@ -40,7 +41,7 @@ def save(
 
     if preload:
         save_data = []
-        with concurrent.futures.ThreadPoolExecutor(
+        with ThreadPoolExecutorWithQueueSizeLimit(
             max_workers=downloader.threads
         ) as executor:
             future_to_song = {
